@@ -1,3 +1,4 @@
+require 'securerandom'
 class LeetClass
   attr_accessor :classes
   def initialize
@@ -9,18 +10,18 @@ class LeetClass
       name = "C".concat(i.to_s)
       Object.const_set(name, Class.new)
       new_class = eval("#{name}")
-      new_class.singleton_class.class_eval do 
-        method_name = name 
+      new_class.singleton_class.class_eval do
+        method_name = name + "cm"
         define_method(method_name) do
-          puts method_name + "cm"
-        end 
-      end 
+          method_name + SecureRandom.hex
+        end
+      end
       im_name = name + "im"
       new_class.instance_eval do
         define_method im_name do
           im_name
-        end 
-      end 
+        end
+      end
       @classes << new_class
     end
     @classes
