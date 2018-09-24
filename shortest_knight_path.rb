@@ -92,7 +92,7 @@ class Board
       queue.shift
     end
     if queue[0].value == target
-      trace_path(queue[0])
+      return trace_path(queue[0])
     end
   end
 
@@ -114,4 +114,8 @@ class Node
     @children = children
     @value = value
   end
+end
+
+def knight(start, finish)
+  Board.new.shortest_path(start,finish)
 end
