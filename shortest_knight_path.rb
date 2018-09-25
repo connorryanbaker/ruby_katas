@@ -108,7 +108,8 @@ class Board
 end
 
 class Node
-  attr_reader :parent, :children, :value
+  attr_reader :value
+  attr_accessor :parent, :children
   def initialize(parent,children,value)
     @parent = parent
     @children = children

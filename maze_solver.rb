@@ -1,32 +1,12 @@
+require 'benchmark'
 class Grid
   attr_reader :rows, :columns, :grid, :exit, :start
-  def initialize(array)
-    if !is_it_impossible(array)
-      @rows = array.length
-      @columns = array[0].length
-      @grid = make_grid(array)
-      @exit = find_exit
-      configure_cells
-    else
-      return []
-    end
-  end
-
-  def is_it_impossible(array)
-    perim = []
-    array.each_with_index do |row, ri|
-      row = row.split("")
-      if ri == 0 || ri == array.length - 1
-        perim << row
-      else
-        row.each do |col, ci|
-          if ci == 0 || ci == row.length - 1
-            perim << col
-          end
-        end
-      end
-    end
-    perim.all? {|e| e == "#"}
+  def initialize(array,ex)
+    @rows = array.length
+    @columns = array[0].length
+    @grid = make_grid(array)
+    configure_cells
+    @exit = self[ex[0],ex[1]]
   end
 
   def make_grid(array)
@@ -46,22 +26,6 @@ class Grid
       end
     end
     grid
-  end
-
-  def find_exit
-    es = nil
-    each_row do |row|
-      row.each do |cell|
-        if cell.row == 0 || cell.row == @rows - 1 || cell.column == 0 || cell.column == @columns - 1
-          if cell.is_a?(Cell)
-            es = cell
-            es.escape = true
-            return es
-          end
-        end
-      end
-    end
-    es
   end
 
   def each_row
@@ -113,7 +77,6 @@ class Grid
   end
 
   def find_path
-    return [] if @exit.nil?
     distances = self.distances
     path = distances.path_to(@exit,self)
     rough = path.cells.map {|e| [e.row, e.column]}
@@ -233,23 +196,6 @@ class Cell
   def nsew
     arr = [@n, @s, @e, @w].reject {|e| e.nil?}
   end
-
-  def distances
-    distances = Distances.new(self)
-    frontier = [ self ]
-    while frontier.any?
-      new_frontier = []
-      frontier.each do |cell|
-        cell.nsew.each do |neighbor|
-          next if distances[neighbor]
-          distances[neighbor] = distances[cell] + 1
-          new_frontier << neighbor
-        end
-      end
-      frontier = new_frontier
-    end
-    distances
-  end
 end
 
 class Distances
@@ -287,9 +233,140 @@ class Distances
     breadcrumbs
   end
 end
-test = Grid.new([
+
+def escape(maze)
+    ex = is_it_impossible(maze)
+    if ex == true
+      return []
+    else
+      p Grid.new(maze, ex).find_path
+    end
+end
+def is_it_impossible(array)
+  result = true
+  array.each_with_index do |row, ri|
+    row = row.split("")
+    row.each_with_index do |col, ci|
+      if ri == 0 || ri == array.length - 1 || ci == 0 || ci == row.length - 1
+        result = [ri, ci] if col == " "
+      end
+    end
+  end
+  result
+end
+p  Benchmark.realtime {
+    escape([
+      '####### #',
+      '#>#   # #',
+      '#   #   #',
+      '#########'
+    ])
+    escape([
+  "#########################################",
+  "#<    #       #     #         # #   #   #",
+  "##### # ##### # ### # # ##### # # # ### #",
+  "# #   #   #   #   #   # #     #   #   # #",
+  "# # # ### # ########### # ####### # # # #",
+  "#   #   # # #       #   # #   #   # #   #",
+  "####### # # # ##### # ### # # # #########",
+  "#   #     # #     # #   #   # # #       #",
+  "# # ####### ### ### ##### ### # ####### #",
+  "# #             #   #     #   #   #   # #",
+  "# ############### ### ##### ##### # # # #",
+  "#               #     #   #   #   # #   #",
+  "##### ####### # ######### # # # ### #####",
+  "#   # #   #   # #         # # # #       #",
+  "# # # # # # ### # # ####### # # ### ### #",
+  "# # #   # # #     #   #     # #     #   #",
+  "# # ##### # # ####### # ##### ####### # #",
+  "# #     # # # #   # # #     # #       # #",
+  "# ##### ### # ### # # ##### # # ### ### #",
+  "#     #     #     #   #     #   #   #   #",
+  "#########################################"
+])
+escape([
+"#########################################",
+"#<    #       #     #         # #   #   #",
+"##### # ##### # ### # # ##### # # # ### #",
+"# #   #   #   #   #   # #     #   #   # #",
+"# # # ### # ########### # ####### # # # #",
+"#   #   # # #       #   # #   #   # #   #",
+"####### # # # ##### # ### # # # #########",
+"#   #     # #     # #   #   # # #       #",
+"# # ####### ### ### ##### ### # ####### #",
+"# #             #   #     #   #   #   # #",
+"# ############### ### ##### ##### # # # #",
+"#               #     #   #   #   # #   #",
+"##### ####### # ######### # # # ### #####",
+"#   # #   #   # #         # # # #       #",
+"# # # # # # ### # # ####### # # ### ### #",
+"# # #   # # #     #   #     # #     #   #",
+"# # ##### # # ####### # ##### ####### # #",
+"# #     # # # #   # # #     # #       # #",
+"# ##### ### # ### # # ##### # # ### ### #",
+"#     #     #     #   #     #   #   #    ",
+"#########################################"
+])
+escape([
+"#########################################",
+"#<    #       #     #         # #   #   #",
+"##### # ##### # ### # # ##### # # # ### #",
+"# #   #   #   #   #   # #     #   #   # #",
+"# # # ### # ########### # ####### # # # #",
+"#   #   # # #       #   # #   #   # #   #",
+"####### # # # ##### # ### # # # #########",
+"#   #     # #     # #   #   # # #       #",
+"# # ####### ### ### ##### ### # ####### #",
+"# #             #   #     #   #   #   # #",
+"# ############### ### ##### ##### # # # #",
+"#               #     #   #   #   # #   #",
+"##### ####### # ######### # # # ### #####",
+"#   # #   #   # #         # # # #       #",
+"# # # # # # ### # # ####### # # ### ### #",
+"# # #   # # #     #   #     # #     #   #",
+"# # ##### # # ####### # ##### ####### # #",
+"# #     # # # #   # # #     # #       # #",
+"# ##### ### # ### # # ##### # # ### ### #",
+"#     #     #     #   #     #   #   #    ",
+"#########################################"
+])
+escape([
+"#########################################",
+"#<    #       #     #         # #   #   #",
+"##### # ##### # ### # # ##### # # # ### #",
+"# #   #   #   #   #   # #     #   #   # #",
+"# # # ### # ########### # ####### # # # #",
+"#   #   # # #       #   # #   #   # #   #",
+"####### # # # ##### # ### # # # #########",
+"#   #     # #     # #   #   # # #       #",
+"# # ####### ### ### ##### ### # ####### #",
+"# #             #   #     #   #   #   # #",
+"# ############### ### ##### ##### # # # #",
+"#               #     #   #   #   # #   #",
+"##### ####### # ######### # # # ### #####",
+"#   # #   #   # #         # # # #       #",
+"# # # # # # ### # # ####### # # ### ### #",
+"# # #   # # #     #   #     # #     #   #",
+"# # ##### # # ####### # ##### ####### # #",
+"# #     # # # #   # # #     # #       # #",
+"# ##### ### # ### # # ##### # # ### ### #",
+"#     #     #     #   #     #   #   #    ",
+"#########################################"
+])
+  escape([
   '##########',
-  '#>       #',
+  '#        #',
+  '#  ##### #',
+  '#  #   # #',
+  '#  #^# # #',
+  '#  ### # #',
+  '#      # #',
   '######## #'
 ])
-p test.find_path
+escape([
+  '####### #',
+  '#>#   # #',
+  '#   #   #',
+  '#########'
+])
+}
