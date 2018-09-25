@@ -1,3 +1,4 @@
+#https://www.codewars.com/kata/shortest-knight-path/train/ruby
 KNIGHT_MOVES = [[-2,-1],[-2,1],[-1,2],[1,2],[2,1],[2,-1],[1,-2],[-1,-2]]
 class Square
   attr_accessor :neighbors, :position

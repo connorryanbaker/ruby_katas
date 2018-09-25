@@ -1,3 +1,4 @@
+#https://www.codewars.com/kata/escape-the-maze/train/ruby
 require 'benchmark'
 class Grid
   attr_reader :rows, :columns, :grid, :exit, :start

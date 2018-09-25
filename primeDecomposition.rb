@@ -1,4 +1,5 @@
-ass Factorizer
+#https://www.codewars.com/kata/prime-number-decompositions/ruby
+class Factorizer
   attr_accessor :factors
   def initialize(n)
     @n = n
@@ -43,22 +44,22 @@ ass Factorizer
 end
 
 def getAllPrimeFactors(n)
-  if !n.is_a?(Integer) || n <= 0 
+  if !n.is_a?(Integer) || n <= 0
     return []
-  end 
+  end
   Factorizer.new(n).prime_array
 end
 
 def getUniquePrimeFactorsWithCount(n)
-  if !n.is_a?(Integer) || n <= 0 
+  if !n.is_a?(Integer) || n <= 0
     return [[],[]]
-  end 
+  end
   Factorizer.new(n).unique_prime_array
 end
 
 def getUniquePrimeFactorsWithProducts(n)
-  if !n.is_a?(Integer) || n <= 0 
+  if !n.is_a?(Integer) || n <= 0
     return []
-  end 
+  end
   Factorizer.new(n).prime_products_array
 end

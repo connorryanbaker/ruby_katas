@@ -1,3 +1,4 @@
+#https://www.codewars.com/kata/nesting-structure-comparison
 class Array
   def same_structure_as(arr)
     return false if arr.class != Array

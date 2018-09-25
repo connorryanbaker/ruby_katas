@@ -1,3 +1,4 @@
+#https://www.codewars.com/kata/primes-in-numbers/ruby
 class Factorizer
   attr_accessor :factors
   def initialize(n)

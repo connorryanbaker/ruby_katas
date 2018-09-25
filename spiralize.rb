@@ -1,3 +1,4 @@
+#https://www.codewars.com/kata/make-a-spiral/ruby
 class Cell
   attr_reader :row, :col
   attr_accessor :n, :s, :e, :w, :mark

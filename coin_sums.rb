@@ -1,5 +1,5 @@
 def count_change(amount)
-  cc(amount, 2)
+  cc(amount, 8)
 end
 
 def cc(amount, kinds)
@@ -14,7 +14,7 @@ def first_denomination(kinds)
   if kinds == 1
     return 1
   elsif kinds == 2
-    return 5
+    return 2
   elsif kinds == 3
     return 5
   elsif kinds == 4
@@ -30,4 +30,4 @@ def first_denomination(kinds)
   end
 end
 
-p count_change(10)
+p count_change(200)

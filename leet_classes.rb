@@ -1,3 +1,4 @@
+#https://www.codewars.com/kata/1337-classes/ruby
 require 'securerandom'
 class LeetClass
   attr_accessor :classes
